@@ -1,5 +1,6 @@
 package com.myShop.myShop.service.product;
 
+import com.myShop.myShop.exception.ProductNotFoundException;
 import com.myShop.myShop.model.Product;
 import com.myShop.myShop.repository.ProductRepository;
 
@@ -14,12 +15,14 @@ public class ProductService implements  IProductService{
 
     @Override
     public Product getProductById(Long id) {
-        return null;
+        return productRepository.findById(id).orElseThrow(()-> new ProductNotFoundException("Product Not Found with this id"));
     }
 
     @Override
     public void deleteProductById(Long id) {
-
+        productRepository.findById(id).ifPresentOrElse(productRepository:: delete, ()-> {
+            throw new ProductNotFoundException("Product not found!");
+        });
     }
 
     @Override
