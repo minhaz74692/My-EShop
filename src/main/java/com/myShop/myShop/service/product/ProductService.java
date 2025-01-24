@@ -8,6 +8,7 @@ import com.myShop.myShop.repository.ProductRepository;
 import com.myShop.myShop.request.AddProductRequest;
 import com.myShop.myShop.request.ProductUpdateRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +17,9 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ProductService implements  IProductService{
+    @Autowired
     private final ProductRepository productRepository;
+    @Autowired
     private final CategoryRepository categoryRepository;
 
     @Override
