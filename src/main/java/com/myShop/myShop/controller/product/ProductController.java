@@ -4,6 +4,7 @@ import com.myShop.myShop.Response.ApiResponse;
 import com.myShop.myShop.model.Category;
 import com.myShop.myShop.model.Product;
 import com.myShop.myShop.request.AddProductRequest;
+import com.myShop.myShop.request.ProductUpdateRequest;
 import com.myShop.myShop.service.product.IProductService;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -114,6 +115,33 @@ public class ProductController {
         try{
             productService.deleteProductById(id);
             return ResponseEntity.ok(new ApiResponse("Deleted!", null));
+        }catch (Exception e){
+            return  ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Error: "+ e.getMessage(), null));
+        }
+    }
+
+    @GetMapping("/count/{brandName}/{name}")
+    public  ResponseEntity<ApiResponse> countProductByBrandAndName(@PathVariable String brandName, @PathVariable String name){
+        try{
+            return  ResponseEntity.ok(new ApiResponse("Success", productService.countProductsByBrandAndName(brandName,name)));
+        }catch (Exception e){
+            return  ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Error: "+ e.getMessage(), null));
+        }
+    }
+
+    @GetMapping("/total-count")
+    public  ResponseEntity<ApiResponse> countProduct(){
+        try{
+            return  ResponseEntity.ok(new ApiResponse("Success", productService.countProducts()));
+        }catch (Exception e){
+            return  ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Error: "+ e.getMessage(), null));
+        }
+    }
+
+    @PutMapping("/update/{id}")
+    public  ResponseEntity<ApiResponse> updateProduct(@RequestBody ProductUpdateRequest request, @PathVariable Long id){
+        try{
+            return  ResponseEntity.ok(new ApiResponse("Success", productService.updateProduct(request,id)));
         }catch (Exception e){
             return  ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Error: "+ e.getMessage(), null));
         }
