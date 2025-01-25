@@ -1,7 +1,6 @@
 package com.myShop.myShop.service.category;
 
 import com.myShop.myShop.exception.AlreadyExistExeption;
-import com.myShop.myShop.exception.CategoryNotFoundException;
 import com.myShop.myShop.exception.ResourseNotFoundException;
 import com.myShop.myShop.model.Category;
 import com.myShop.myShop.repository.CategoryRepository;
