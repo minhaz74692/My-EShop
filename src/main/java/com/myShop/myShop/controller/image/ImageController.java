@@ -1,4 +1,4 @@
-package com.myShop.myShop.controller.product;
+package com.myShop.myShop.controller.image;
 
 import com.myShop.myShop.Response.ApiResponse;
 import com.myShop.myShop.dto.ImageDto;
@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -68,6 +67,7 @@ public class ImageController {
     @DeleteMapping("/image/{imageId}/delete")
     public ResponseEntity<ApiResponse> deleteImage(@PathVariable Long imageId){
         try {
+            Image image = imageService.getImageById(imageId);
             if(image != null){
                 imageService.deleteImageById(imageId);
                 return ResponseEntity.ok(new ApiResponse("Deleted Successfully!", null));
