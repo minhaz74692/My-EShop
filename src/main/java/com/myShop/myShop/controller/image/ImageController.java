@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -34,6 +35,17 @@ public class ImageController {
         } catch (Exception e) {
            return  ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Images upload error", e.getMessage()));
         }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<byte[]> getImage(@PathVariable Long id) throws SQLException, IOException {
+        Image image = imageService.getImageById(id);
+
+        byte[] imageBytes = image.getImage().getBinaryStream().readAllBytes();
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.valueOf(image.getFileType()))
+                .body(imageBytes);
     }
 
     @GetMapping("/hello")
