@@ -1,6 +1,8 @@
 package com.myShop.myShop.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,11 +22,8 @@ public class Category {
     private String name;
 
     @OneToMany(mappedBy = "category" )
-    @JsonBackReference
+    @JsonManagedReference //When you want to show the list of product in the category response
+    @JsonIgnore
     private List<Product> products;
-
-    public Category(String name) {
-        this.name = name;
-    }
 
 }

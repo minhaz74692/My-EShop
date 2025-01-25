@@ -7,6 +7,7 @@ import com.myShop.myShop.repository.CategoryRepository;
 import com.myShop.myShop.repository.ProductRepository;
 import com.myShop.myShop.request.AddProductRequest;
 import com.myShop.myShop.request.ProductUpdateRequest;
+import com.myShop.myShop.service.category.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,37 +18,20 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ProductService implements  IProductService{
-    @Autowired
     private final ProductRepository productRepository;
-    @Autowired
-    private final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
 
     @Override
-    public Product addProduct(AddProductRequest request) {
-        //Check if the category is found in the DB
-        //IF yes, set it as the new product category
-        //If no, then same it as a new category
-        //Then set as the new product category
-
-        Category category = Optional.ofNullable(categoryRepository.findByName(request.getCategory().getName()))
-                .orElseGet(()->{
-                    Category newCategory = new Category(request.getCategory().getName());
-                    return  categoryRepository.save(newCategory);
-            });
-        request.setCategory(category);
-        return productRepository.save(createProduct(request, category));
+    public Product addProduct(AddProductRequest addProductRequest) {
+        Product product = addProductRequest.createProduct();
+        Category category = categoryService.getCategoryById(addProductRequest.getCategoryId());
+        if(category!=null){
+        product.setCategory(category);
+         return productRepository.save(product);
+        }
+        return null;
     }
 
-    private Product createProduct(AddProductRequest request, Category category){
-        return  new Product(
-                request.getName(),
-                request.getBrand(),
-                request.getPrice(),
-                request.getInventory(),
-                request.getDescription(),
-                category
-        );
-    }
 
     @Override
     public Product getProductById(Long id) {
@@ -76,7 +60,7 @@ public class ProductService implements  IProductService{
         existingProduct.setInventory(request.getInventory());
         existingProduct.setDescription(request.getDescription());
 
-        Category category =categoryRepository.findByName(request.getCategory().getName());
+        Category category =categoryService.getCategoryById(request.getCategoryId());
         existingProduct.setCategory(category);
         return  existingProduct;
     }

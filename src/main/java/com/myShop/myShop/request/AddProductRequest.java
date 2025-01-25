@@ -2,6 +2,7 @@ package com.myShop.myShop.request;
 
 import com.myShop.myShop.model.Category;
 import com.myShop.myShop.model.Image;
+import com.myShop.myShop.model.Product;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -17,5 +18,16 @@ public class AddProductRequest {
     private BigDecimal price;
     private int inventory;
     private  String description;
-    private Category category;
+    private Long categoryId;
+
+    public Product createProduct(){
+        return Product.builder()
+                .name(this.name)
+                .description(this.description)
+                .price(this.price)
+                .brand(this.brand)
+                .inventory(this.inventory)
+                .build();
+
+    }
 }
