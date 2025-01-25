@@ -10,21 +10,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("${api.prefix}/product")
 public class ProductController {
     private final IProductService productService;
-
-    @GetMapping("/all")
-    public ResponseEntity<ApiResponse> getAllProduct(){
-        try{
-            return  ResponseEntity.ok(new ApiResponse("Success!", productService.getAllProducts()));
-        } catch (Exception e) {
-            return  ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Error: "+ e.getMessage(), null));
-        }
-    }
 
     @PostMapping("/create")
     public ResponseEntity<ApiResponse> addProduct(@RequestBody AddProductRequest request){
@@ -35,6 +27,30 @@ public class ProductController {
             return  ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Error: "+ e.getMessage(), null));
         }
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<ApiResponse> getAllProduct(){
+        try{
+            return  ResponseEntity.ok(new ApiResponse("Success!", productService.getAllProducts()));
+        } catch (Exception e) {
+            return  ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Error: "+ e.getMessage(), null));
+        }
+    }
+
+    @GetMapping("/id/{id}")
+    public ResponseEntity<ApiResponse> getProductById(@PathVariable Long id){
+        try{
+            Product product = productService.getProductById(id);
+            if(product != null){
+                return  ResponseEntity.ok(new ApiResponse("Success!", product));
+            }
+         return  ResponseEntity.status(NOT_FOUND).body(new ApiResponse("Product Not Found!", null));
+        }catch (Exception e){
+            return  ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Error: ", e.getMessage()));
+        }
+    }
+
+
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<ApiResponse> deleteProduct(@PathVariable Long id){
