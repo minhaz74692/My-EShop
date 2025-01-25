@@ -28,9 +28,9 @@ public class CategoryController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<ApiResponse> addCategory(@RequestBody Category name){
+    public ResponseEntity<ApiResponse> addCategory(@RequestBody Category category){
         try {
-            Category category = categoryService.addCategory(name);
+            Category newCategory = categoryService.addCategory(category);
             return  ResponseEntity.ok(new ApiResponse("created!", category));
         } catch (Exception e) {
             return ResponseEntity.status(CONFLICT).body(new ApiResponse("Error: "+ e.getMessage(), null));
