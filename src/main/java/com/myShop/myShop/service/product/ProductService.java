@@ -1,15 +1,19 @@
 package com.myShop.myShop.service.product;
 
+import com.myShop.myShop.dto.ImageDto;
+import com.myShop.myShop.dto.ProductDto;
 import com.myShop.myShop.exception.ProductNotFoundException;
 import com.myShop.myShop.model.Category;
+import com.myShop.myShop.model.Image;
 import com.myShop.myShop.model.Product;
 import com.myShop.myShop.repository.CategoryRepository;
+import com.myShop.myShop.repository.ImageRepository;
 import com.myShop.myShop.repository.ProductRepository;
 import com.myShop.myShop.request.AddProductRequest;
 import com.myShop.myShop.request.ProductUpdateRequest;
 import com.myShop.myShop.service.category.CategoryService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +24,8 @@ import java.util.Optional;
 public class ProductService implements  IProductService{
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
+    private final ImageRepository imageRepository;
+    private  final ModelMapper modelMapper;
 
     @Override
     public Product addProduct(AddProductRequest addProductRequest) {
@@ -108,5 +114,21 @@ public class ProductService implements  IProductService{
     @Override
     public Long countProducts() {
         return productRepository.count();
+    }
+
+    public List<ProductDto> getConvertedProducts(List<Product> products){
+        return  products.stream().map(this::convertToDto).toList();
+    }
+
+    @Override
+    public ProductDto convertToDto(Product product){
+        ProductDto productDto = modelMapper.map(product, ProductDto.class);
+        productDto.setCategoryId(product.getCategory().getId());
+        List<Image> images = imageRepository.findByProductId(product.getId());
+        List<ImageDto> imageDtos = images.stream()
+                .map(image -> modelMapper.map(image, ImageDto.class))
+                .toList();
+        productDto.setImages(imageDtos);
+        return  productDto;
     }
 }

@@ -1,6 +1,7 @@
 package com.myShop.myShop.controller.product;
 
 import com.myShop.myShop.Response.ApiResponse;
+import com.myShop.myShop.dto.ProductDto;
 import com.myShop.myShop.model.Category;
 import com.myShop.myShop.model.Product;
 import com.myShop.myShop.request.AddProductRequest;
@@ -35,16 +36,20 @@ public class ProductController {
     @GetMapping("/all")
     public ResponseEntity<ApiResponse> getAllProduct(){
         try{
-            return  ResponseEntity.ok(new ApiResponse("Success!", productService.getAllProducts()));
+            List<Product> products = productService.getAllProducts();
+            List<ProductDto> productDtos = products.stream().map(productService::convertToDto).toList();
+            return  ResponseEntity.ok(new ApiResponse("Success!", productDtos));
         } catch (Exception e) {
             return  ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Error: "+ e.getMessage(), null));
         }
     }
 
-    @GetMapping("/name/{productName}")
-    public ResponseEntity<ApiResponse> getProductById(@PathVariable String productName){
+    @GetMapping("")
+    public ResponseEntity<ApiResponse> getProductById(@RequestParam String name){
         try{
-            return  ResponseEntity.ok(new ApiResponse("Success!", productService.getProductsByName(productName)));
+            List<Product> products = productService.getProductsByName(name);
+            List<ProductDto> productDtos = products.stream().map(productService::convertToDto).toList();
+            return  ResponseEntity.ok(new ApiResponse("Success!", productDtos));
         }catch (Exception e){
             return  ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Error: ", e.getMessage()));
         }
@@ -55,7 +60,8 @@ public class ProductController {
         try{
             Product product = productService.getProductById(id);
             if(product != null){
-                return  ResponseEntity.ok(new ApiResponse("Success!", product));
+                ProductDto productDto = productService.convertToDto(product);
+                return  ResponseEntity.ok(new ApiResponse("Success!", productDto));
             }
          return  ResponseEntity.status(NOT_FOUND).body(new ApiResponse("Product Not Found!", null));
         }catch (Exception e){

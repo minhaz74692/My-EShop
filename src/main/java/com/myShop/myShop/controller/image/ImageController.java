@@ -48,6 +48,9 @@ public class ImageController {
                 .body(imageBytes);
     }
 
+//    @GetMapping("/product-id/{id}")
+//    public ResponseEntity<>
+
     @GetMapping("/hello")
     public ResponseEntity<String> helloEndpoint(){
         return  ResponseEntity.ok("Hello");
