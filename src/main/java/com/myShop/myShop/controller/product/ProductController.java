@@ -37,8 +37,7 @@ public class ProductController {
     public ResponseEntity<ApiResponse> getAllProduct(){
         try{
             List<Product> products = productService.getAllProducts();
-            List<ProductDto> productDtos = products.stream().map(productService::convertToDto).toList();
-            return  ResponseEntity.ok(new ApiResponse("Success!", productDtos));
+            return  ResponseEntity.ok(new ApiResponse("Success!", productService.getConvertedProducts(products)));
         } catch (Exception e) {
             return  ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Error: "+ e.getMessage(), null));
         }
@@ -48,8 +47,7 @@ public class ProductController {
     public ResponseEntity<ApiResponse> getProductById(@RequestParam String name){
         try{
             List<Product> products = productService.getProductsByName(name);
-            List<ProductDto> productDtos = products.stream().map(productService::convertToDto).toList();
-            return  ResponseEntity.ok(new ApiResponse("Success!", productDtos));
+            return  ResponseEntity.ok(new ApiResponse("Success!", productService.getConvertedProducts(products)));
         }catch (Exception e){
             return  ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Error: ", e.getMessage()));
         }
