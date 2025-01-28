@@ -1,4 +1,4 @@
-package com.myShop.myShop.repository;
+package com.myShop.myShop.repository.image;
 
 import com.myShop.myShop.model.Image;
 import org.springframework.data.jpa.repository.JpaRepository;

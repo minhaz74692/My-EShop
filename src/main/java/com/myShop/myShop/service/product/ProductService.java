@@ -6,9 +6,8 @@ import com.myShop.myShop.exception.ProductNotFoundException;
 import com.myShop.myShop.model.Category;
 import com.myShop.myShop.model.Image;
 import com.myShop.myShop.model.Product;
-import com.myShop.myShop.repository.CategoryRepository;
-import com.myShop.myShop.repository.ImageRepository;
-import com.myShop.myShop.repository.ProductRepository;
+import com.myShop.myShop.repository.image.ImageRepository;
+import com.myShop.myShop.repository.product.ProductRepository;
 import com.myShop.myShop.request.AddProductRequest;
 import com.myShop.myShop.request.ProductUpdateRequest;
 import com.myShop.myShop.service.category.CategoryService;
@@ -17,7 +16,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

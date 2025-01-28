@@ -4,7 +4,7 @@ import com.myShop.myShop.dto.ImageDto;
 import com.myShop.myShop.exception.ResourseNotFoundException;
 import com.myShop.myShop.model.Image;
 import com.myShop.myShop.model.Product;
-import com.myShop.myShop.repository.ImageRepository;
+import com.myShop.myShop.repository.image.ImageRepository;
 import com.myShop.myShop.service.product.IProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
