@@ -7,6 +7,7 @@ import com.myShop.myShop.model.Product;
 import com.myShop.myShop.request.AddProductRequest;
 import com.myShop.myShop.request.ProductUpdateRequest;
 import com.myShop.myShop.service.product.IProductService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class ProductController {
     private final IProductService productService;
 
     @PostMapping("/create")
-    public ResponseEntity<ApiResponse> addProduct(@RequestBody AddProductRequest request){
+    public ResponseEntity<ApiResponse> addProduct(@Valid  @RequestBody AddProductRequest request){
         try {
             Product product = productService.addProduct(request);
             return  ResponseEntity.ok(new ApiResponse("Success!", product));
