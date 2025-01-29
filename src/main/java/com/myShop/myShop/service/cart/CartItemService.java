@@ -59,6 +59,11 @@ public class CartItemService implements ICartItemService{
     }
 
     @Override
+    public void removeCartItemById(Long id){
+        cartItemRepository.deleteById(id);
+    }
+
+    @Override
     public CartItemDto convertToDto(CartItem item){
         CartItemDto cartItemDto = modelMapper.map(item, CartItemDto.class);
         cartItemDto.setProduct(productService.convertToDto(item.getProduct()));
