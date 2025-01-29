@@ -35,7 +35,11 @@ public class CartService implements ICartService{
 
     @Override
     public BigDecimal getTotalAmount(Long id) {
-        return null;
+        CartDto cart = getCart(id);
+        return  cart.getCartItems()
+                .stream()
+                .map(CartItemDto::getTotalPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     @Override

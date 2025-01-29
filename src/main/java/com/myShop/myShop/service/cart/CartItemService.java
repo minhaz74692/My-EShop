@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static org.springframework.data.util.Optionals.ifPresentOrElse;
 
@@ -49,25 +50,12 @@ public class CartItemService implements ICartItemService{
 
         Cart cart =  cartRepository.findById(addCartItemRequest.getCartId())
                 .orElseGet(() -> {
-                    return cartRepository.save(new Cart());
+                    Cart newCart = new Cart();
+                  return cartRepository.save(newCart);
                 });
-        Set<CartItem> allItems =  cart.getCartItems();
-        if (allItems == null) {
-            allItems = new HashSet<>(); // Initialize the Set if it's null
-            cart.setCartItems(allItems); // Update the cart with the new Set
-        }
 
-        allItems.add(item);
-        BigDecimal totalCartAmount =  BigDecimal.ZERO;
-        for (CartItem i : allItems) {
-            totalCartAmount = totalCartAmount.add(i.getTotalPrice()); // Accumulate the total
-        }
-        cart.setTotalAmount(totalCartAmount);
-
-        Cart newCart = cartRepository.save(cart);
-        item.setCart(newCart);
-        return this.convertToDto(cartItemRepository.save(item)) ;
-
+        cart.addItem(item);
+        return this.convertToDto(cartItemRepository.save(item));
     }
 
     @Override

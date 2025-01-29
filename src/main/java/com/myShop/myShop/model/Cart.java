@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -26,6 +27,30 @@ public class Cart {
 //    @JsonIgnore
     private Set<CartItem> cartItems;
 
+    public  void  addItem(CartItem item){
+        if(this.cartItems == null){
+            cartItems = new HashSet<>();
+        }
+        this.cartItems.add(item);
+        item.setCart(this);
+        updateTotalAmount();
+    }
+    public void removeItem(CartItem item){
+        this.cartItems.remove(item);
+        item.setCart(null);
+        updateTotalAmount();
+    }
+    private void updateTotalAmount(){
+        this.totalAmount = cartItems.stream()
+                .map(item -> {
+                    BigDecimal unitPrice = item.getUnitPrice();
+                    if(unitPrice == null){
+                        return BigDecimal.ZERO;
+                    }
+                    return unitPrice.multiply(BigDecimal.valueOf(item.getQuantity()));
+                })
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
     public Set<CartItem> setItems(CartItem item){
         this.cartItems.add(item);
         return  this.cartItems;
