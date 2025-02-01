@@ -3,6 +3,7 @@ package com.myShop.myShop.controller.cart;
 import com.myShop.myShop.Response.ApiResponse;
 import com.myShop.myShop.dto.CartItemDto;
 import com.myShop.myShop.exception.ResourseNotFoundException;
+import com.myShop.myShop.model.CartItem;
 import com.myShop.myShop.request.AddCartItemRequest;
 import com.myShop.myShop.service.cart.ICartItemService;
 import jakarta.validation.Valid;
@@ -10,8 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.*;
 
 
 @RequiredArgsConstructor
@@ -37,6 +37,16 @@ public class CartItemController {
        }
         return  ResponseEntity.ok(new ApiResponse("Success!", item));
     }
+
+    @GetMapping("/items")
+    public ResponseEntity<ApiResponse> getCartItemByCardIdAndProductId(@RequestParam Long cartId, @RequestParam Long productId){
+        CartItem cartItem = cartItemService.getCartItemByCartIdAndProductId(cartId, productId);
+        if(cartItem ==null){
+            return  ResponseEntity.status(NOT_FOUND).body(new ApiResponse("NOT Found!", null));
+        }
+        return  ResponseEntity.status(FOUND).body(new ApiResponse("Success!", cartItem));
+    }
+
 
     public CartItemDto getItem(Long id){
         try {

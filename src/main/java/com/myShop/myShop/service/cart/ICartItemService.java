@@ -9,4 +9,5 @@ public interface ICartItemService {
     CartItemDto createCartItem(AddCartItemRequest cartItem);
     CartItemDto convertToDto(CartItem item);
     void removeCartItemById(Long id);
+    CartItem getCartItemByCartIdAndProductId(Long cartId, Long ProductId);
 }

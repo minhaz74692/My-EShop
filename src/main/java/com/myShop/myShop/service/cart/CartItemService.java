@@ -42,13 +42,21 @@ public class CartItemService implements ICartItemService{
     @Override
     public CartItemDto createCartItem(AddCartItemRequest addCartItemRequest) {
         Product product = productService.getProductById(addCartItemRequest.getProductId());
+        CartItem existingItem = getCartItemByCartIdAndProductId(addCartItemRequest.getCartId(), addCartItemRequest.getProductId());
+        if(existingItem != null){
+            existingItem.setQuantity(existingItem.getQuantity() + addCartItemRequest.getQuantity());
+            existingItem.setCustomTotalPrice();
+            Cart existinggCart = existingItem.getCart();
+            existinggCart.addItem(existingItem);
+            return  this.convertToDto(cartItemRepository.save(existingItem));
+        }
         CartItem item = new CartItem();
         item.setQuantity(addCartItemRequest.getQuantity());
         item.setProduct(product);
         item.setUnitPrice(product.getPrice());
-        item.setTotalPrice(item.getUnitPrice().multiply(new BigDecimal(item.getQuantity())));
+        item.setCustomTotalPrice();
 
-        Cart cart =  cartRepository.findById(addCartItemRequest.getCartId())
+        Cart cart =  cartRepository.findById(addCartItemRequest.getCartId() == null ?-1:addCartItemRequest.getCartId())
                 .orElseGet(() -> {
                     Cart newCart = new Cart();
                   return cartRepository.save(newCart);
@@ -61,6 +69,11 @@ public class CartItemService implements ICartItemService{
     @Override
     public void removeCartItemById(Long id){
         cartItemRepository.deleteById(id);
+    }
+
+    @Override
+    public CartItem getCartItemByCartIdAndProductId(Long cartId, Long ProductId) {
+       return cartItemRepository.getCartItemByCartIdAndProductId(cartId, ProductId);
     }
 
     @Override
